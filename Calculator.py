@@ -8,7 +8,6 @@ entryBox = Entry(root, width=60, borderwidth=5)
 entryBox.grid(row=0, column=0, columnspan=4, padx=0, pady=10)
 
 # Functions
-numbersList = []
 
 
 def buttonClick(number):
@@ -18,33 +17,23 @@ def buttonClick(number):
 
 
 def buttonClear():
-    global numbersList
-
     entryBox.delete(0, END)
-    numbersList = []
 
 
-def buttonAdd():
-    global numbersList
-
-    num = entryBox.get()
-    if num == '':
-        numbersList.append(0)
-    else:
-        numbersList.append(num)
-    entryBox.delete(0, END)
+def buttonOperation(operation):
+    current = entryBox.get()
+    if current[-1].isnumeric():
+        entryBox.delete(0, END)
+        entryBox.insert(0, f"{current} {operation} ")
 
 
 def buttonEquals():
-    global numbersList
-    numbersList.append(entryBox.get())
-    entryBox.delete(0, END)
-
-    total = 0
-    for number in numbersList:
-        total += int(number)
-    numbersList.clear()
-    entryBox.insert(0, total)
+    equation = entryBox.get()
+    if equation[-2] not in "+-x/":
+        equation = equation.replace(" ", "")
+        equation = equation.replace("x", "*")
+        entryBox.delete(0, END)
+        entryBox.insert(0, eval(equation))
 
 
 # Define Buttons
@@ -73,10 +62,14 @@ button_clear = Button(root, text="Clear", padx=29,
                       pady=20, command=buttonClear)
 button_equals = Button(root, text="=", padx=39, pady=20, command=buttonEquals)
 
-button_add = Button(root, text="+", padx=39, pady=20, command=buttonAdd)
-button_subtract = Button(root, text="-", padx=40, pady=20, command=buttonClick)
-button_multiply = Button(root, text="x", padx=40, pady=20, command=buttonClick)
-button_divide = Button(root, text="/", padx=40, pady=20, command=buttonClick)
+button_add = Button(root, text="+", padx=39, pady=20,
+                    command=lambda: buttonOperation("+"))
+button_subtract = Button(root, text="-", padx=40,
+                         pady=20, command=lambda: buttonOperation("-"))
+button_multiply = Button(root, text="x", padx=40,
+                         pady=20, command=lambda: buttonOperation("x"))
+button_divide = Button(root, text="/", padx=40, pady=20,
+                       command=lambda: buttonOperation("/"))
 
 # Add buttons to root window
 button_0.grid(row=4, column=0)
