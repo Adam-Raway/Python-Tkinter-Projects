@@ -1,4 +1,5 @@
 from tkinter import *
+from unicodedata import category
 from PIL import ImageTk, Image
 import requests
 import json
